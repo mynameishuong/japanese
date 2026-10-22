@@ -74,6 +74,10 @@ body{background:#f3f4ed;color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans
 </style>
 <style>
 :is(#vocab,#kanji) input,:is(#vocab,#kanji) select{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font:inherit;max-width:100%}:is(#vocab,#kanji) .controls{margin:18px 0}:is(#vocab,#kanji) .vword{font-size:52px;color:var(--ink);margin:12px 0;font-family:"Yu Gothic",Meiryo,sans-serif}:is(#vocab,#kanji) .vreading{font-size:23px;color:var(--green)}:is(#vocab,#kanji) .vmeaning{font-size:22px;margin:18px 0}:is(#vocab,#kanji) .option{font-size:19px;min-height:75px}:is(#vocab,#kanji) [hidden]{display:none!important}:is(#vocab,#kanji) .vcard{text-align:center;background:#f5f7f0;border:1px solid var(--line);border-radius:22px;padding:25px 16px;min-height:260px}:is(#vocab,#kanji) .vstatus{min-height:28px;margin:16px 0;text-align:center}:is(#vocab,#kanji) .vlist{max-height:320px;overflow:auto;margin-top:20px}:is(#vocab,#kanji) .vrow{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:10px;padding:14px 5px;border-bottom:1px solid var(--line);font-size:14px}.section-nav{margin-bottom:28px}.section-nav button{flex:1}:is(#vocab,#kanji) button:disabled{opacity:.5;cursor:default}
+</style><style>
+#options .option.answer-revealed{flex-direction:column;gap:8px;padding:20px 12px;min-height:118px}
+#options .answer-detail{display:block;font-size:24px;line-height:1.4;font-weight:500;color:inherit;font-family:"Yu Gothic",Meiryo,"Segoe UI",sans-serif}
+@media(max-width:650px){#options .option.answer-revealed{min-height:112px}#options .answer-detail{font-size:22px}}
 </style></head>
 <body>
 <div class="wrap"><div class="card">
@@ -272,7 +276,16 @@ function chooseAnswer(btn,selected){
   if(answered)return;
   answered=true;
   const q=questions[index];
-  const buttons=[...document.querySelectorAll(".option")];
+  const buttons=[...document.getElementById("options").querySelectorAll(".option")];
+  buttons.forEach((b,i)=>{
+    const opt=q.options[i];
+    const detail=document.createElement("span");
+    detail.className="answer-detail";
+    detail.textContent=q.type==="kanaToRomaji"?shownKana(opt):opt.romaji;
+    if(q.type==="kanaToRomaji")detail.lang="ja";
+    b.classList.add("answer-revealed");
+    b.appendChild(detail);
+  });
 
   buttons.forEach(b=>{ if(b.dataset.romaji===q.item.romaji)b.classList.add("correct"); });
   if(selected.romaji===q.item.romaji){
