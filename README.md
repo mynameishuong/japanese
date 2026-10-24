@@ -19,7 +19,7 @@
    - **Folder:** `/(root)`
    rồi bấm **Save**.
 9. Chờ GitHub Pages triển khai xong. Đường link sẽ có dạng:
-   `https://TEN-TAI-KHOAN.github.io/hiragana-katakana-quiz/`
+   `https://mynameishuong.github.io/japanese/`
    Thay `TEN-TAI-KHOAN` bằng tên tài khoản GitHub của bạn.
 10. Mở đường link đó trên điện thoại để kiểm tra. Có thể gửi link cho người khác.
 
