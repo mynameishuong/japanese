@@ -147,7 +147,7 @@ body{background:#f3f4ed;color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans
         </div>
       </div>
     </div>
-    <div class="note">Âm thanh dùng giọng tiếng Nhật có sẵn trong trình duyệt/hệ điều hành.</div>
+    <div class="note" id="kanaExampleNote">Âm thanh dùng giọng tiếng Nhật có sẵn trong trình duyệt/hệ điều hành.</div>
   </div>
 
   <button class="next" id="nextBtn" type="button">Câu tiếp theo</button>
@@ -246,14 +246,17 @@ function showLearning(item){
   document.getElementById("learnRomaji").textContent=item.romaji;
   document.getElementById("learnHint").textContent=`${scriptType==="katakana"?"Katakana":"Hiragana"}: ${shownKana(item)}`;
 
-  document.getElementById("word").textContent=item.word;
+  document.getElementById("word").textContent=shownWord(item.word);
   document.getElementById("wordRomaji").textContent=item.wordRomaji;
   document.getElementById("wordMeaning").textContent=item.meaning;
 
-  document.getElementById("phrase").textContent=item.phrase;
+  document.getElementById("phrase").textContent=shownWord(item.phrase);
   document.getElementById("phraseRomaji").textContent=item.phraseRomaji;
   document.getElementById("phraseMeaning").textContent=item.phraseMeaning;
 
+  document.getElementById("kanaExampleNote").textContent = scriptType === "katakana"
+    ? "Ví dụ được phiên tự sang Katakana để luyện mặt chữ; một số từ tiếng Nhật thông thường sẽ được viết bằng Hiragana hoặc Kanji."
+    : "Âm thanh dùng giọng tiếng Nhật có sẵn trong trình duyệt/hệ điều hành.";
   document.getElementById("learnbox").style.display="block";
 }
 function speak(text){
@@ -305,9 +308,9 @@ function chooseAnswer(btn,selected){
   document.getElementById("nextBtn").style.display="block";
 }
 
-document.getElementById("speakKana").addEventListener("click",()=>currentItem&&speak(currentItem.kana));
-document.getElementById("speakWord").addEventListener("click",()=>currentItem&&speak(currentItem.word));
-document.getElementById("speakPhrase").addEventListener("click",()=>currentItem&&speak(currentItem.phrase));
+document.getElementById("speakKana").addEventListener("click",()=>currentItem&&speak(shownKana(currentItem)));
+document.getElementById("speakWord").addEventListener("click",()=>currentItem&&speak(shownWord(currentItem.word)));
+document.getElementById("speakPhrase").addEventListener("click",()=>currentItem&&speak(shownWord(currentItem.phrase)));
 
 document.getElementById("nextBtn").addEventListener("click",()=>{
   stopAudio();
@@ -338,7 +341,7 @@ function finishQuiz(){
     d.innerHTML=`${scriptType==="katakana"||!m.item.img?`<span style="font-size:32px;font-weight:700">${shownKana(m.item)}</span>`:`<img class="review-kana" src="${m.item.img}" alt="${m.item.romaji}">`}
       <b>${m.item.romaji}</b>
       ${newRomaji.has(m.item.romaji)?'<span class="badge">chữ mới</span>':''}
-      — từ gợi nhớ: <b>${m.item.word}</b> (${m.item.meaning})`;
+      — từ gợi nhớ: <b>${shownWord(m.item.word)}</b> (${m.item.meaning})`;
     review.appendChild(d);
   });
 }
