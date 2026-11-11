@@ -78,11 +78,73 @@ body{background:#f3f4ed;color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans
 #options .option.answer-revealed{flex-direction:column;gap:8px;padding:20px 12px;min-height:118px}
 #options .answer-detail{display:block;font-size:24px;line-height:1.4;font-weight:500;color:inherit;font-family:"Yu Gothic",Meiryo,"Segoe UI",sans-serif}
 @media(max-width:650px){#options .option.answer-revealed{min-height:112px}#options .answer-detail{font-size:22px}}
+
+/* Number and typing practice */
+.practice-panel[hidden], .practice-panel [hidden]{display:none!important}
+.practice-panel h1{text-align:center}
+.practice-settings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
+.practice-settings label{font-size:13px;color:#62776b;font-weight:700;display:flex;flex-direction:column;gap:7px}
+.practice-settings select,.practice-answer input{min-height:44px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;background:#fffefb;color:var(--ink);font:inherit;width:100%}
+.practice-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;margin:15px 0}
+.practice-stats{text-align:center;font-size:13px;font-weight:700;color:var(--green);min-height:25px;margin:14px 0}
+.practice-question{border:1px solid #e3e8de;border-radius:20px;background:#f5f8ef;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px;gap:8px}
+.practice-question .practice-hero{font-size:clamp(35px,7vw,64px);font-weight:700;color:var(--ink);line-height:1.35;overflow-wrap:anywhere}
+.practice-question .practice-help{font-size:13px;color:#718277}
+.practice-answer{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin:16px 0}
+.practice-answer label{grid-column:1/-1;color:#718277;font-size:13px;font-weight:700}
+.practice-answer input{font-size:23px;text-align:center;min-width:0}
+.practice-feedback{min-height:48px;padding:10px 4px;text-align:center;font-weight:650;line-height:1.6}
+.practice-reference{margin:22px 0;border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:13px;color:#5d7568;background:#fbfcf8}
+.practice-reference summary{cursor:pointer;font-weight:700;color:var(--green)}
+.practice-tip{text-align:center;font-size:13px;line-height:1.6;color:#62776b}
+@media(max-width:650px){.practice-settings{grid-template-columns:1fr}.practice-answer{grid-template-columns:1fr}.practice-answer button{width:100%}.practice-question{min-height:165px}.section-nav button{flex:1 1 140px}}
 </style></head>
 <body>
 <div class="wrap"><div class="card">
 <div class="brand"><strong><span class="brand-mark">あ</span> kana studio</strong><span>MỖI NGÀY MỘT CHÚT TIẾNG NHẬT</span></div>
-<div class="controls section-nav" aria-label="Mục học"><button id="kanaTab" class="modebtn active">あ · Bảng chữ cái</button><button id="vocabTab" class="modebtn">言葉 · Từ vựng N5</button><button id="kanjiTab" class="modebtn">漢 · Kanji N5</button></div>
+<div class="controls section-nav" aria-label="Mục học"><button id="kanaTab" class="modebtn active">あ · Bảng chữ cái</button><button id="vocabTab" class="modebtn">言葉 · Từ vựng N5</button><button id="kanjiTab" class="modebtn">漢 · Kanji N5</button><button id="numbersTab" class="modebtn">数 · Luyện số</button><button id="typingTab" class="modebtn">⌨ · Thi gõ Kana</button></div>
+<section id="numbers" class="practice-panel" hidden>
+ <div class="eyebrow">HỌC SỐ NHẬT · 1–10.000</div><h1>Luyện đọc & viết số</h1>
+ <p class="sub">Tập số bất kỳ từ 1 đến 10.000. Luyện đọc Hiragana, nghe số, nhìn Kanji, nhập chữ số hoặc nhập cách đọc.</p>
+ <div class="practice-settings">
+  <label>Chế độ <select id="numberMode"><option value="mix">Ngẫu nhiên mọi dạng</option><option value="digitToKana">Nhìn số → viết Hiragana</option><option value="kanaToDigit">Nhìn Hiragana → nhập số</option><option value="kanjiToDigit">Nhìn Kanji → nhập số</option><option value="listenToDigit">Nghe → nhập số</option></select></label>
+  <label>Khoảng số <select id="numberRange"><option value="all">1–10.000</option><option value="small">1–100</option><option value="hundreds">101–999</option><option value="thousands">1.000–9.999</option><option value="edge">Số đặc biệt & có số 0</option></select></label>
+  <label>Số câu <select id="numberCount"><option value="10">10 câu</option><option value="20" selected>20 câu</option><option value="50">50 câu</option><option value="100">100 câu</option></select></label>
+ </div>
+ <div class="practice-actions"><button id="numberStart" class="speakbtn">Bắt đầu lượt mới</button><button id="numberHint" class="modebtn">Xem gợi ý</button><button id="numberSpeak" class="modebtn">🔊 Nghe số</button></div>
+ <div class="practice-stats" id="numberStats"></div>
+ <div class="practice-question" id="numberPrompt" aria-live="polite"></div>
+ <form id="numberForm" class="practice-answer"><label for="numberInput" id="numberInputLabel">Câu trả lời</label><input id="numberInput" type="text" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="Nhập đáp án…" enterkeyhint="done"><button class="speakbtn" type="submit">Kiểm tra ↵</button></form>
+ <div id="numberFeedback" class="practice-feedback" role="status" aria-live="polite"></div>
+ <div class="practice-actions"><button id="numberNext" class="modebtn" hidden>Câu tiếp theo →</button><button id="numberReset" class="modebtn">Làm bài mới</button></div>
+ <details class="practice-reference"><summary>Bảng quy tắc số tiếng Nhật (kể cả biến âm)</summary>
+  <p>10 = じゅう · 100 = ひゃく · 1.000 = せん · 10.000 = いちまん</p>
+  <p><strong>Biến âm hàng trăm:</strong> 300 さんびゃく · 600 ろっぴゃく · 800 はっぴゃく</p>
+  <p><strong>Biến âm hàng nghìn:</strong> 3.000 さんぜん · 8.000 はっせん</p>
+  <p>Ví dụ: 2.405 = にせんよんひゃくご · 9.010 = きゅうせんじゅう. Không đọc các hàng có giá trị 0.</p>
+ </details>
+</section>
+<section id="typing" class="practice-panel" hidden>
+ <div class="eyebrow">TẬP GÕ & KIỂM TRA CHỮ NHẬT</div><h1>Thi gõ Hiragana / Katakana</h1>
+ <p class="sub">Luyện từ Romaji sang chữ Nhật bằng bàn phím, hoặc luyện nhập Romaji từ chữ Nhật. Có âm cơ bản, biến âm và âm ghép.</p>
+ <div class="practice-settings">
+  <label>Chữ <select id="typingScript"><option value="hiragana">Hiragana (chữ mềm)</option><option value="katakana">Katakana (chữ cứng)</option><option value="mixed">Trộn cả hai</option></select></label>
+  <label>Bộ chữ <select id="typingGroup"><option value="basic">46 âm cơ bản</option><option value="voiced">Biến âm</option><option value="combo">Âm ghép</option><option value="all">Tất cả</option></select></label>
+  <label>Kiểu nhập <select id="typingMode"><option value="kana">Nhập Kana (bật bàn phím Nhật)</option><option value="romaji">Nhập Romaji (bàn phím Latin)</option></select></label>
+  <label>Số câu <select id="typingCount"><option value="10">10 câu</option><option value="20">20 câu</option><option value="46" selected>46 câu</option><option value="all">Toàn bộ chữ đã chọn</option></select></label>
+ </div>
+ <p class="practice-tip" id="typingTip">Gõ bằng bộ gõ tiếng Nhật (Japanese IME). Ví dụ: nhập ka → か. Dùng Shift hoặc đổi chế độ IME để gõ Katakana.</p>
+ <div class="practice-actions"><button id="typingStart" class="speakbtn">Bắt đầu lượt thi</button><button id="typingSpeak" class="modebtn">🔊 Phát âm</button><button id="typingRetry" class="modebtn" hidden>Ôn câu sai</button></div>
+ <div class="practice-stats" id="typingStats"></div>
+ <div class="practice-question" id="typingPrompt" aria-live="polite"></div>
+ <form id="typingForm" class="practice-answer"><label id="typingInputLabel" for="typingInput">Nhập chữ Nhật</label><input id="typingInput" type="text" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="Nhập câu trả lời…" enterkeyhint="done"><button class="speakbtn" type="submit">Kiểm tra ↵</button></form>
+ <div id="typingFeedback" class="practice-feedback" role="status" aria-live="polite"></div>
+ <div class="practice-actions"><button id="typingNext" class="modebtn" hidden>Câu tiếp theo →</button></div>
+ <details class="practice-reference"><summary>Cách bật bộ gõ tiếng Nhật trên Windows</summary>
+  <p>Vào <strong>Settings → Time & language → Language & region → Add a language → Japanese</strong>. Sau khi cài, nhấn <strong>Win + Space</strong> để chuyển ngôn ngữ. Chọn chế độ Hiragana/Katakana trong Microsoft IME. Bài thi cũng cho phép chọn chế độ nhập Romaji nếu chưa cài IME.</p>
+  <p>Bạn có thể nhấn Enter để kiểm tra, sau đó Enter lần nữa để sang câu tiếp theo.</p>
+ </details>
+</section>
 <section id="vocab" hidden>
 <div class="eyebrow">THẺ TỪ · LUYỆN NHỚ · TRẮC NGHIỆM</div><h1>Từ vựng N5</h1><p class="sub"><span id="vocabTotal">614</span> từ vựng nền tảng N5 và mở rộng · 19 chủ đề<br>Tự biên soạn theo chủ đề thường gặp ở trình độ sơ cấp; không phải nội dung chính thức của Dũng Mori.</p>
 <div class="controls"><input id="vsearch" aria-label="Tìm từ" placeholder="Tìm chữ, cách đọc, nghĩa…"><select id="vcategory" aria-label="Chủ đề"><option value="">Tất cả chủ đề</option></select><select id="vquizcount" aria-label="Số câu trắc nghiệm"><option value="10">10 câu</option><option value="20">20 câu</option><option value="50">50 câu</option><option value="all">Toàn bộ từ đã lọc</option></select><select id="vfilter" aria-label="Trạng thái học"><option value="all">Tất cả từ</option><option value="new">Chưa thuộc</option><option value="known">Đã thuộc</option></select></div>
@@ -434,6 +496,172 @@ $('kaudio').onclick=()=>{if(!('speechSynthesis'in window)||!('SpeechSynthesisUtt
 select();
 })();
 </script><script>
-(()=>{const $=id=>document.getElementById(id);function tab(which){stopAudio();$('vocab').hidden=which!=='vocab';$('kanji').hidden=which!=='kanji';$('quiz').style.display=which==='kana'&&index<questions.length?'block':'none';$('result').style.display=which==='kana'&&index>=questions.length?'block':'none';for(const [id,k] of [['kanaTab','kana'],['vocabTab','vocab'],['kanjiTab','kanji']])$(id).classList.toggle('active',which===k)}$('kanaTab').onclick=()=>tab('kana');$('vocabTab').onclick=()=>tab('vocab');$('kanjiTab').onclick=()=>tab('kanji')})();
-</script></body>
+(()=>{
+ const $=id=>document.getElementById(id);
+ function tab(which){
+   stopAudio();
+   for(const sec of ['vocab','kanji','numbers','typing']) $(sec).hidden=which!==sec;
+   $('quiz').style.display=which==='kana'&&index<questions.length?'block':'none';
+   $('result').style.display=which==='kana'&&index>=questions.length?'block':'none';
+   for(const [id,key] of [['kanaTab','kana'],['vocabTab','vocab'],['kanjiTab','kanji'],['numbersTab','numbers'],['typingTab','typing']]) $(id).classList.toggle('active',which===key);
+ }
+ for(const [id,key] of [['kanaTab','kana'],['vocabTab','vocab'],['kanjiTab','kanji'],['numbersTab','numbers'],['typingTab','typing']]) $(id).onclick=()=>tab(key);
+})();
+</script><script>
+(()=>{
+  const $=id=>document.getElementById(id);
+  function mix(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+  function sound(t){if(!('speechSynthesis' in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';u.rate=.78;const jp=window.speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith('ja'));if(jp)u.voice=jp;window.speechSynthesis.speak(u)}
+  const digits=['','いち','に','さん','よん','ご','ろく','なな','はち','きゅう'];
+  const kanjiDigits=['','一','二','三','四','五','六','七','八','九'];
+  function toKana(n){
+    if(n===10000)return 'いちまん';
+    if(!Number.isInteger(n)||n<1||n>10000)throw Error('Out of range');
+    const thousands=Math.floor(n/1000),hundreds=Math.floor(n%1000/100),tens=Math.floor(n%100/10),ones=n%10;
+    let result='';
+    if(thousands)result+=({1:'せん',3:'さんぜん',8:'はっせん'}[thousands]||digits[thousands]+'せん');
+    if(hundreds)result+=({1:'ひゃく',3:'さんびゃく',6:'ろっぴゃく',8:'はっぴゃく'}[hundreds]||digits[hundreds]+'ひゃく');
+    if(tens)result+=(tens===1?'じゅう':digits[tens]+'じゅう');
+    if(ones)result+=digits[ones];
+    return result;
+  }
+  function toKanji(n){
+    if(n===10000)return '一万';
+    const th=Math.floor(n/1000),hu=Math.floor(n%1000/100),te=Math.floor(n%100/10),on=n%10;
+    return (th?(th===1?'':kanjiDigits[th])+'千':'')+(hu?(hu===1?'':kanjiDigits[hu])+'百':'')+(te?(te===1?'':kanjiDigits[te])+'十':'')+(on?kanjiDigits[on]:'');
+  }
+  const fmt=n=>n.toLocaleString('vi-VN');
+  const special=[100,101,105,110,111,120,200,300,301,303,306,308,309,310,333,600,606,608,800,808,900,999,1000,1001,1010,1020,1100,1111,1200,1300,1600,1800,2000,2001,2010,2020,2300,2600,2800,3000,3003,3010,3030,3300,3600,3800,4000,4004,5000,5050,6000,6060,6600,7000,7070,8000,8008,8080,8800,9000,9009,9090,9900,9999,10000];
+  let numQueue=[],numIndex=0,numScore=0,numDone=false,numMistakes=[];
+  function sampleNumbers(count,range){
+    let min=1,max=10000;
+    if(range==='small')max=100;
+    if(range==='hundreds'){min=101;max=999}
+    if(range==='thousands'){min=1000;max=9999}
+    const pool=range==='edge'?special:Array.from({length:max-min+1},(_,i)=>min+i);
+    return mix(pool).slice(0,Math.min(count,pool.length));
+  }
+  function qMode(mode){return mode==='mix'?mix(['digitToKana','kanaToDigit','kanjiToDigit','listenToDigit'])[0]:mode}
+  function startNums(){
+    const mode=$('numberMode').value,range=$('numberRange').value,count=Number($('numberCount').value);
+    numQueue=sampleNumbers(count,range).map(n=>({n,mode:qMode(mode)}));numIndex=0;numScore=0;numMistakes=[];showNumber();
+  }
+  function numberCurrent(){return numQueue[numIndex]}
+  function showNumber(){
+    numDone=false;$('numberFeedback').textContent='';$('numberNext').hidden=true;$('numberHint').disabled=false;
+    $('numberInput').disabled=false;$('numberForm').querySelector('button').disabled=false;
+    if(numIndex>=numQueue.length){
+      $('numberStats').textContent=`Hoàn thành · ${numScore}/${numQueue.length} câu đúng`;
+      $('numberPrompt').innerHTML=`<span class="practice-help">Kết quả bài thi</span><span class="practice-hero">${numScore}/${numQueue.length}</span><span class="practice-help">${numMistakes.length?'Bạn có thể làm lượt mới để ôn thêm.':'Rất tốt! Không có câu sai.'}</span>`;
+      $('numberForm').hidden=true;$('numberHint').disabled=true;$('numberSpeak').disabled=true;return;
+    }
+    const q=numberCurrent(),n=q.n;
+    $('numberForm').hidden=false;$('numberSpeak').disabled=false;
+    $('numberStats').textContent=`Câu ${numIndex+1}/${numQueue.length} · Đúng ${numScore}`;
+    const labels={digitToKana:'Viết cách đọc bằng Hiragana',kanaToDigit:'Nhập chữ số tương ứng',kanjiToDigit:'Đọc Kanji và nhập chữ số',listenToDigit:'Nghe số rồi nhập chữ số'};
+    const hero=q.mode==='digitToKana'?fmt(n):q.mode==='kanaToDigit'?toKana(n):q.mode==='kanjiToDigit'?toKanji(n):'🔊';
+    $('numberPrompt').replaceChildren();
+    const a=document.createElement('span');a.className='practice-help';a.textContent=labels[q.mode];
+    const b=document.createElement('span');b.className='practice-hero';b.textContent=hero;
+    const c=document.createElement('span');c.className='practice-help';c.textContent=q.mode==='listenToDigit'?'Nhấn “Nghe số” để phát lại':'Điền đáp án ở bên dưới';
+    $('numberPrompt').append(a,b,c);
+    $('numberInputLabel').textContent=q.mode==='digitToKana'?'Viết bằng Hiragana (chữ mềm)':'Nhập số (1–10000)';
+    $('numberInput').inputMode=q.mode==='digitToKana'?'text':'numeric';
+    $('numberInput').value='';$('numberInput').placeholder=q.mode==='digitToKana'?'Ví dụ: さんびゃく':'Ví dụ: 2405';
+    if(!$('numbers').hidden)$('numberInput').focus();
+  }
+  function checkNum(){
+    if(numDone)return;
+    const q=numberCurrent();if(!q)return;
+    const user=$('numberInput').value.trim();if(!user){$('numberFeedback').textContent='Hãy nhập đáp án trước.';return}
+    const numeric=q.mode!=='digitToKana';
+    const normalized=user.replace(/[\s\u00a0.,，．]/g,'').replace(/[０-９]/g,ch=>String(ch.charCodeAt(0)-0xFF10));
+    const ok=numeric ? /^\d+$/.test(normalized)&&Number(normalized)===q.n : user.replace(/[\s　]/g,'').normalize('NFKC')===toKana(q.n);
+    if(ok)numScore++;else numMistakes.push(q);
+    numDone=true;$('numberInput').disabled=true;$('numberForm').querySelector('button').disabled=true;$('numberNext').hidden=false;$('numberHint').disabled=true;
+    $('numberFeedback').textContent=(ok?'✓ Chính xác!':'✗ Chưa chính xác.')+` ${fmt(q.n)} = ${toKanji(q.n)} = ${toKana(q.n)}`;
+    $('numberFeedback').style.color=ok?'#33764d':'#b45a46';
+    $('numberNext').focus();
+  }
+  $('numberStart').onclick=startNums;$('numberReset').onclick=startNums;
+  $('numberForm').onsubmit=e=>{e.preventDefault();if(numDone){numIndex++;showNumber()}else checkNum()};
+  $('numberNext').onclick=()=>{numIndex++;showNumber()};
+  $('numberHint').onclick=()=>{if(numberCurrent()&&!numDone)$('numberFeedback').textContent=`Gợi ý: ${toKanji(numberCurrent().n)} · ${numberCurrent().mode==='digitToKana'?toKana(numberCurrent().n).slice(0,2)+'…':'số có '+String(numberCurrent().n).length+' chữ số'}`};
+  $('numberSpeak').onclick=()=>{if(numberCurrent())sound(toKana(numberCurrent().n))};
+  $('numberInput').addEventListener('keydown',e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==='Enter'&&numDone){e.preventDefault();numIndex++;showNumber()}});
+  // Expose deterministic number conversion for self-check and future lesson extensions.
+  window.kanaStudioNumber={toKana,toKanji};
+
+  // Typing practice: all source kana shared with the original Kana quiz.
+  const kata=s=>[...s].map(ch=>ch>='ぁ'&&ch<='ゖ'?String.fromCharCode(ch.charCodeAt(0)+0x60):ch).join('');
+  function baseKanaItems(){
+    return kana.filter(x=>!x.group).map(x=>({character:x.kana,romaji:x.romaji,group:'basic'}));
+  }
+  function typingBank(){
+    const g=$('typingGroup').value,script=$('typingScript').value;
+    const base=kana.filter(x=>g==='all'||(g==='basic'?!x.group:x.group===g)).map(x=>({character:x.kana,romaji:x.romaji,group:x.group||'basic'}));
+    if(script==='hiragana')return base.map(x=>({...x,display:x.character,script:'Hiragana'}));
+    if(script==='katakana')return base.map(x=>({...x,display:kata(x.character),script:'Katakana'}));
+    return [...base.map(x=>({...x,display:x.character,script:'Hiragana'})),...base.map(x=>({...x,display:kata(x.character),script:'Katakana'}))];
+  }
+  // Standard aliases for Romaji exercises, including common variants.
+  const aliases={shi:['si'],chi:['ti'],tsu:['tu'],fu:['hu'],ji:['zi'],sha:['sya'],shu:['syu'],sho:['syo'],cha:['tya','cya'],chu:['tyu','cyu'],cho:['tyo','cyo'],ja:['zya','jya'],ju:['zyu','jyu'],jo:['zyo','jyo'],wo:['o']};
+  let typeQueue=[],typeIndex=0,typeScore=0,typeDone=false,typeWrong=[],typeLastWrong=[];
+  function typingStart(items){
+    const bank=items||typingBank();
+    let limit=$('typingCount').value==='all'?bank.length:Number($('typingCount').value);
+    typeQueue=mix(bank).slice(0,Math.min(limit,bank.length));typeIndex=0;typeScore=0;typeWrong=[];typeLastWrong=[];
+    $('typingRetry').hidden=true;
+    showTyping();
+  }
+  function typeQ(){return typeQueue[typeIndex]}
+  function showTyping(){
+    typeDone=false;$('typingFeedback').textContent='';$('typingNext').hidden=true;
+    if(typeIndex>=typeQueue.length){
+      $('typingStats').textContent=`Hoàn thành · ${typeScore}/${typeQueue.length} câu đúng`;
+      $('typingPrompt').innerHTML=`<span class="practice-help">Kết quả lượt thi</span><span class="practice-hero">${typeScore}/${typeQueue.length}</span><span class="practice-help">${typeWrong.length?'Nhấn “Ôn câu sai” để làm lại.':'Xuất sắc! Bạn đã hoàn thành.'}</span>`;
+      $('typingForm').hidden=true;$('typingSpeak').disabled=true;typeLastWrong=[...typeWrong];$('typingRetry').hidden=!typeWrong.length;return;
+    }
+    const q=typeQ(),isKana=$('typingMode').value==='kana';
+    $('typingForm').hidden=false;$('typingSpeak').disabled=false;
+    $('typingStats').textContent=`Câu ${typeIndex+1}/${typeQueue.length} · Đúng ${typeScore} · ${q.script}`;
+    $('typingPrompt').replaceChildren();
+    const a=document.createElement('span');a.className='practice-help';a.textContent=isKana?'Nhập chữ '+q.script+' tương ứng với Romaji':'Nhập Romaji tương ứng với chữ '+q.script;
+    const b=document.createElement('span');b.className='practice-hero';b.textContent=isKana?q.romaji:q.display;
+    const c=document.createElement('span');c.className='practice-help';c.textContent=`Nhóm: ${q.group==='basic'?'Âm cơ bản':q.group==='voiced'?'Biến âm':'Âm ghép'}`;
+    $('typingPrompt').append(a,b,c);
+    $('typingInputLabel').textContent=isKana?`Gõ ${q.script} bằng Japanese IME`:'Gõ Romaji bằng bàn phím Latin';
+    $('typingInput').value='';$('typingInput').placeholder=isKana?'Ví dụ: か / カ':'Ví dụ: ka';$('typingInput').disabled=false;$('typingForm').querySelector('button').disabled=false;
+    if(!$('typing').hidden)$('typingInput').focus();
+  }
+  function checkTyping(){
+    if(typeDone)return;
+    const q=typeQ();if(!q)return;
+    const text=$('typingInput').value.trim();if(!text){$('typingFeedback').textContent='Hãy nhập câu trả lời trước.';return}
+    const isKana=$('typingMode').value==='kana';
+    let ok;
+    if(isKana){ok=text.normalize('NFKC').replace(/[\s　]/g,'')===q.display}
+    else {const got=text.toLowerCase().replace(/\s+/g,'');ok=got===q.romaji.toLowerCase()||(aliases[q.romaji]||[]).includes(got)}
+    if(ok)typeScore++;else typeWrong.push(q);
+    typeDone=true;$('typingInput').disabled=true;$('typingForm').querySelector('button').disabled=true;$('typingNext').hidden=false;
+    $('typingFeedback').textContent=(ok?'✓ Chính xác!':'✗ Chưa đúng.')+` ${q.display} = ${q.romaji}`;
+    $('typingFeedback').style.color=ok?'#33764d':'#b45a46';$('typingNext').focus();
+  }
+  function typingTip(){
+    const isKana=$('typingMode').value==='kana';
+    $('typingTip').textContent=isKana?'Bật Japanese IME để gõ Kana trực tiếp: ka → か / カ. Khi chọn Katakana, cần chuyển IME sang Katakana.':'Bài thi hiện chữ Nhật và bạn nhập Romaji (ví dụ: し → shi). Không cần cài IME.';
+    typingStart();
+  }
+  $('typingStart').onclick=()=>typingStart();
+  $('typingRetry').onclick=()=>typingStart(typeLastWrong);
+  $('typingNext').onclick=()=>{typeIndex++;showTyping()};
+  $('typingForm').onsubmit=e=>{e.preventDefault();if(typeDone){typeIndex++;showTyping()}else checkTyping()};
+  $('typingSpeak').onclick=()=>{if(typeQ())sound(typeQ().display)};
+  $('typingInput').addEventListener('keydown',e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==='Enter'&&typeDone){e.preventDefault();typeIndex++;showTyping()}});
+  ['typingScript','typingGroup','typingMode','typingCount'].forEach(id=>$(id).addEventListener('change',typingTip));
+  startNums();typingStart();
+})();
+
+</script>
+</body>
 </html>
