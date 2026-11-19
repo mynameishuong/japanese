@@ -98,11 +98,30 @@ body{background:#f3f4ed;color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans
 .practice-reference summary{cursor:pointer;font-weight:700;color:var(--green)}
 .practice-tip{text-align:center;font-size:13px;line-height:1.6;color:#62776b}
 @media(max-width:650px){.practice-settings{grid-template-columns:1fr}.practice-answer{grid-template-columns:1fr}.practice-answer button{width:100%}.practice-question{min-height:165px}.section-nav button{flex:1 1 140px}}
+
+#lesson[hidden]{display:none!important}#lesson .lesson-layout{display:grid;grid-template-columns:1fr;gap:16px}#lesson .lesson-card{border:1px solid var(--line);border-radius:21px;background:#f5f8ef;padding:22px;text-align:center;min-height:260px;display:flex;flex-direction:column;justify-content:center;gap:13px}#lesson .lesson-word{font-size:clamp(32px,6vw,54px);font-family:"Yu Gothic",Meiryo,sans-serif;line-height:1.5;overflow-wrap:anywhere}#lesson .lesson-reading{font-size:23px;color:var(--green)}#lesson .lesson-meaning{font-size:20px;font-weight:650}#lesson .lesson-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:15px 0}#lesson button:disabled{opacity:.55;cursor:default}#lesson .lesson-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#lesson .lesson-option{padding:16px 12px;border:1px solid #d9e2d3;border-radius:14px;background:white;color:var(--ink);cursor:pointer;font-size:15px}#lesson .lesson-option.correct{background:#e4f3e5;border-color:#4e9463}#lesson .lesson-option.wrong{background:#fce8e4;border-color:#c76f60}#lesson .lesson-meta{text-align:center;color:#6c806e;font-size:13px;margin:12px 0}#lesson .lesson-list{max-height:360px;overflow:auto}#lesson .lesson-row{display:grid;grid-template-columns:minmax(100px,1fr) minmax(100px,1fr) minmax(100px,1.3fr);gap:10px;padding:11px 3px;border-bottom:1px solid var(--line);font-size:13px}#lesson .lesson-status{min-height:26px;text-align:center;font-weight:650;margin:10px auto}#lesson .lesson-status.ok{color:#33764d}#lesson .lesson-status.bad{color:#b45a46}@media(max-width:650px){#lesson .lesson-options{grid-template-columns:1fr}#lesson .lesson-row{grid-template-columns:1fr 1fr}#lesson .lesson-row>span:last-child{grid-column:1/-1}}
 </style></head>
 <body>
 <div class="wrap"><div class="card">
 <div class="brand"><strong><span class="brand-mark">あ</span> kana studio</strong><span>MỖI NGÀY MỘT CHÚT TIẾNG NHẬT</span></div>
-<div class="controls section-nav" aria-label="Mục học"><button id="kanaTab" class="modebtn active">あ · Bảng chữ cái</button><button id="vocabTab" class="modebtn">言葉 · Từ vựng N5</button><button id="kanjiTab" class="modebtn">漢 · Kanji N5</button><button id="numbersTab" class="modebtn">数 · Luyện số</button><button id="typingTab" class="modebtn">⌨ · Thi gõ Kana</button></div>
+<div class="controls section-nav" aria-label="Mục học"><button id="kanaTab" class="modebtn active">あ · Bảng chữ cái</button><button id="vocabTab" class="modebtn">言葉 · Từ vựng N5</button><button id="kanjiTab" class="modebtn">漢 · Kanji N5</button><button id="lessonTab" class="modebtn">📘 · Theo chương</button><button id="numbersTab" class="modebtn">数 · Luyện số</button><button id="typingTab" class="modebtn">⌨ · Thi gõ Kana</button></div>
+<section id="lesson" class="practice-panel" hidden>
+ <div class="eyebrow">HỌC THEO CHƯƠNG · MINNA / DŨNG MORI</div>
+ <h1>Từ vựng theo chương</h1>
+ <p class="sub">Bài 01-A · Nội dung dựa trên danh sách tiếng Nhật trong PDF bạn gửi; nghĩa và hoạt động luyện tập được biên soạn ngắn gọn. <a href="https://dungmori.com/cdn/pdf/20260108153238_T%E1%BB%AB%20v%E1%BB%B1ng%20-%201-A.pdf" target="_blank" rel="noopener noreferrer">Đối chiếu PDF gốc (2 trang)</a>.</p>
+ <div class="practice-settings">
+  <label>Chương <select id="lessonSelect"><option value="01-A">Bài 01-A · Giới thiệu & chào hỏi</option></select></label>
+  <label>Nhóm từ <select id="lessonCategory"><option value="all">Tất cả nhóm</option></select></label>
+  <label>Trạng thái <select id="lessonFilter"><option value="all">Toàn bộ</option><option value="new">Chưa thuộc</option><option value="known">Đã thuộc</option></select></label>
+  <label>Số câu thi <select id="lessonCount"><option value="10">10 câu</option><option value="20">20 câu</option><option value="all">Tất cả từ đang chọn</option></select></label>
+ </div>
+ <div class="controls"><input id="lessonSearch" placeholder="Tìm chữ Nhật, cách đọc hoặc nghĩa…" aria-label="Tìm từ theo chương" style="flex:1;min-width:180px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)"><button class="modebtn active" id="lessonStudy" type="button">Học flashcard</button><button class="modebtn" id="lessonTest" type="button">Thi trắc nghiệm</button></div>
+ <div id="lessonStats" class="lesson-meta"></div><div id="lessonDisplay" class="lesson-layout"></div><div id="lessonStatus" class="lesson-status" aria-live="polite"></div>
+ <div id="lessonControls" class="lesson-actions"><button id="lessonPrev" class="modebtn" type="button">← Trước</button><button id="lessonReveal" class="modebtn" type="button">Hiện nghĩa</button><button id="lessonSpeak" class="speakbtn" type="button">🔊 Nghe</button><button id="lessonKnown" class="modebtn" type="button">Đánh dấu đã thuộc</button><button id="lessonNext" class="modebtn" type="button">Tiếp →</button></div>
+ <div id="lessonQuizControls" class="lesson-actions" hidden><button id="lessonNextQuestion" class="speakbtn" type="button" disabled>Câu tiếp theo →</button></div>
+ <details><summary style="cursor:pointer;margin-top:22px">Danh sách từ thuộc Bài 01-A</summary><div id="lessonList" class="lesson-list"></div></details>
+ <p class="note">Tiến độ học theo chương lưu riêng trong trình duyệt. Bài 01-A là chương duy nhất đã có PDF; các chương sau sẽ được thêm khi có tài liệu tương ứng.</p>
+</section>
 <section id="numbers" class="practice-panel" hidden>
  <div class="eyebrow">HỌC SỐ NHẬT · 1–10.000</div><h1>Luyện đọc & viết số</h1>
  <p class="sub">Tập số bất kỳ từ 1 đến 10.000. Luyện đọc Hiragana, nghe số, nhìn Kanji, nhập chữ số hoặc nhập cách đọc.</p>
@@ -500,12 +519,12 @@ select();
  const $=id=>document.getElementById(id);
  function tab(which){
    stopAudio();
-   for(const sec of ['vocab','kanji','numbers','typing']) $(sec).hidden=which!==sec;
+   for(const sec of ['vocab','kanji','numbers','typing','lesson']) $(sec).hidden=which!==sec;
    $('quiz').style.display=which==='kana'&&index<questions.length?'block':'none';
    $('result').style.display=which==='kana'&&index>=questions.length?'block':'none';
-   for(const [id,key] of [['kanaTab','kana'],['vocabTab','vocab'],['kanjiTab','kanji'],['numbersTab','numbers'],['typingTab','typing']]) $(id).classList.toggle('active',which===key);
+   for(const [id,key] of [['kanaTab','kana'],['vocabTab','vocab'],['kanjiTab','kanji'],['numbersTab','numbers'],['typingTab','typing'],['lessonTab','lesson']]) $(id).classList.toggle('active',which===key);
  }
- for(const [id,key] of [['kanaTab','kana'],['vocabTab','vocab'],['kanjiTab','kanji'],['numbersTab','numbers'],['typingTab','typing']]) $(id).onclick=()=>tab(key);
+ for(const [id,key] of [['kanaTab','kana'],['vocabTab','vocab'],['kanjiTab','kanji'],['numbersTab','numbers'],['typingTab','typing'],['lessonTab','lesson']]) $(id).onclick=()=>tab(key);
 })();
 </script><script>
 (()=>{
@@ -662,6 +681,33 @@ select();
   startNums();typingStart();
 })();
 
+</script>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const data=[{"w":"ベトナム","r":"ベトナム","m":"Việt Nam","c":"Quốc gia"},{"w":"日本","r":"にほん","m":"Nhật Bản","c":"Quốc gia"},{"w":"中国","r":"ちゅうごく","m":"Trung Quốc","c":"Quốc gia"},{"w":"韓国","r":"かんこく","m":"Hàn Quốc","c":"Quốc gia"},{"w":"タイ","r":"タイ","m":"Thái Lan","c":"Quốc gia"},{"w":"～人","r":"～じん","m":"hậu tố chỉ người thuộc một nước","c":"Quốc tịch"},{"w":"ベトナム人","r":"ベトナムじん","m":"người Việt Nam","c":"Quốc tịch"},{"w":"日本人","r":"にほんじん","m":"người Nhật Bản","c":"Quốc tịch"},{"w":"中国人","r":"ちゅうごくじん","m":"người Trung Quốc","c":"Quốc tịch"},{"w":"韓国人","r":"かんこくじん","m":"người Hàn Quốc","c":"Quốc tịch"},{"w":"タイ人","r":"タイじん","m":"người Thái Lan","c":"Quốc tịch"},{"w":"私","r":"わたし","m":"tôi","c":"Con người & nghề nghiệp"},{"w":"医者","r":"いしゃ","m":"bác sĩ","c":"Con người & nghề nghiệp"},{"w":"教師","r":"きょうし","m":"giáo viên (nghề nghiệp)","c":"Con người & nghề nghiệp"},{"w":"先生","r":"せんせい","m":"thầy hoặc cô giáo","c":"Con người & nghề nghiệp"},{"w":"銀行員","r":"ぎんこういん","m":"nhân viên ngân hàng","c":"Con người & nghề nghiệp"},{"w":"会社員","r":"かいしゃいん","m":"nhân viên công ty","c":"Con người & nghề nghiệp"},{"w":"学生","r":"がくせい","m":"học sinh hoặc sinh viên","c":"Con người & nghề nghiệp"},{"w":"（お）名前","r":"（お）なまえ","m":"tên; tên gọi (lịch sự: お名前)","c":"Con người & nghề nghiệp"},{"w":"料理","r":"りょうり","m":"món ăn; việc nấu nướng","c":"Ẩm thực & đồ uống"},{"w":"ベトナム料理","r":"ベトナムりょうり","m":"món ăn Việt Nam","c":"Ẩm thực & đồ uống"},{"w":"日本料理","r":"にほんりょうり","m":"món ăn Nhật Bản","c":"Ẩm thực & đồ uống"},{"w":"ビール","r":"ビール","m":"bia","c":"Ẩm thực & đồ uống"},{"w":"コーヒー","r":"コーヒー","m":"cà phê","c":"Ẩm thực & đồ uống"},{"w":"ジュース","r":"ジュース","m":"nước ép; nước trái cây","c":"Ẩm thực & đồ uống"},{"w":"これ","r":"これ","m":"cái này (gần người nói)","c":"Chỉ định"},{"w":"それ","r":"それ","m":"cái đó (gần người nghe)","c":"Chỉ định"},{"w":"あれ","r":"あれ","m":"cái kia (xa cả hai)","c":"Chỉ định"},{"w":"こちら","r":"こちら","m":"phía này; đây (lịch sự)","c":"Chỉ định"},{"w":"そちら","r":"そちら","m":"phía đó (lịch sự)","c":"Chỉ định"},{"w":"あちら","r":"あちら","m":"phía kia (lịch sự)","c":"Chỉ định"},{"w":"はい","r":"はい","m":"vâng; có","c":"Giao tiếp & chào hỏi"},{"w":"いいえ","r":"いいえ","m":"không","c":"Giao tiếp & chào hỏi"},{"w":"いえいえ","r":"いえいえ","m":"không có gì đâu","c":"Giao tiếp & chào hỏi"},{"w":"おはようございます","r":"おはようございます","m":"chào buổi sáng (lịch sự)","c":"Giao tiếp & chào hỏi"},{"w":"こんにちは","r":"こんにちは","m":"xin chào ban ngày","c":"Giao tiếp & chào hỏi"},{"w":"こんばんは","r":"こんばんは","m":"chào buổi tối","c":"Giao tiếp & chào hỏi"},{"w":"すみません","r":"すみません","m":"xin lỗi; làm phiền","c":"Giao tiếp & chào hỏi"},{"w":"はじめまして","r":"はじめまして","m":"rất vui khi lần đầu gặp nhau","c":"Giao tiếp & chào hỏi"},{"w":"よろしくお願いします","r":"よろしくおねがいします","m":"mong được giúp đỡ","c":"Giao tiếp & chào hỏi"},{"w":"そうです","r":"そうです","m":"đúng như vậy","c":"Giao tiếp & chào hỏi"},{"w":"そうですか","r":"そうですか","m":"vậy sao?","c":"Giao tiếp & chào hỏi"},{"w":"失礼しました","r":"しつれいしました","m":"xin lỗi vì đã thất lễ","c":"Giao tiếp & chào hỏi"},{"w":"大丈夫です","r":"だいじょうぶです","m":"không sao; ổn cả","c":"Giao tiếp & chào hỏi"},{"w":"ええと…","r":"ええと","m":"ừm… (đang suy nghĩ)","c":"Giao tiếp & chào hỏi"},{"w":"あっ","r":"あっ","m":"à! (thán từ ngạc nhiên)","c":"Giao tiếp & chào hỏi"}];
+const categories=[...new Set(data.map(x=>x.c))];categories.forEach(c=>{const o=new Option(c,c);$('lessonCategory').add(o)});
+let known=new Set();try{known=new Set(JSON.parse(localStorage.getItem('kanaStudioLesson01AKnown')||'[]'))}catch{}
+let pool=[],position=0,quiz=false,queue=[],qi=0,score=0,answered=false,missed=[],lastMissed=[];
+const mix=a=>{const v=[...a];for(let i=v.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[v[i],v[j]]=[v[j],v[i]]}return v};
+const el=(tag,txt,cls)=>{const e=document.createElement(tag);e.textContent=txt||'';if(cls)e.className=cls;return e};
+const status=(text='',cls='')=>{const e=$('lessonStatus');e.textContent=text;e.className='lesson-status '+cls};
+function select(){const cat=$('lessonCategory').value,q=$('lessonSearch').value.trim().toLowerCase(),f=$('lessonFilter').value;pool=data.filter(x=>(cat==='all'||x.c===cat)&&(f==='all'||known.has(x.w)===(f==='known'))&&[x.w,x.r,x.m,x.c].some(v=>v.toLowerCase().includes(q)));position=0;quiz=false;render()}
+function card(x,heading,showMeaning){const c=el('div','','lesson-card');c.append(el('div',heading,'label'),el('div',x.w,'lesson-word'),el('div',x.r,'lesson-reading'));if(showMeaning)c.append(el('div',x.m,'lesson-meaning'));return c}
+function speak(s){if(!('speechSynthesis'in window))return status('Thiết bị chưa hỗ trợ phát âm.','bad');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s);u.lang='ja-JP';u.rate=.82;const v=speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith('ja'));if(v)u.voice=v;speechSynthesis.speak(u)}
+function render(){status();$('lessonStudy').classList.toggle('active',!quiz);$('lessonTest').classList.toggle('active',quiz);$('lessonControls').hidden=quiz||!pool.length;$('lessonQuizControls').hidden=!quiz;$('lessonStats').textContent=`Bài 01-A · Đã thuộc ${data.filter(x=>known.has(x.w)).length}/${data.length} · Đang chọn ${pool.length} mục`;
+const list=$('lessonList');list.replaceChildren(...pool.map(x=>{const row=el('div','','lesson-row');row.append(el('span',x.w),el('span',x.r),el('span',x.m));return row}));if(quiz)return quizRender();const area=$('lessonDisplay');area.replaceChildren();if(!pool.length){area.append(el('p','Không có từ phù hợp. Hãy thử bỏ bộ lọc.'));return}const x=pool[position];area.append(card(x,`${x.c} · ${position+1}/${pool.length}`,false));$('lessonReveal').textContent='Hiện nghĩa';$('lessonKnown').textContent=known.has(x.w)?'✓ Đã thuộc · Bỏ đánh dấu':'Đánh dấu đã thuộc';}
+function startQuiz(items){if(!pool.length){status('Bộ lọc hiện không có từ để thi.','bad');return}quiz=true;queue=mix(items||pool);const limit=$('lessonCount').value;queue=queue.slice(0,limit==='all'?queue.length:Math.min(Number(limit),queue.length));qi=0;score=0;missed=[];render()}
+function quizRender(){answered=false;$('lessonNextQuestion').disabled=true;const area=$('lessonDisplay');area.replaceChildren();if(qi>=queue.length){area.append(el('div',`${score}/${queue.length}`,'scoreBig'));area.append(el('p','Đã hoàn thành bài thi!','sub'));const retry=el('button','Làm lượt thi mới','modebtn');retry.onclick=()=>startQuiz();area.append(retry);lastMissed=[...missed];if(missed.length){const wrong=el('button',`Ôn lại ${missed.length} từ sai`,'modebtn');wrong.onclick=()=>startQuiz(lastMissed);area.append(wrong)}$('lessonQuizControls').hidden=true;return}const x=queue[qi];area.append(card(x,`Câu ${qi+1}/${queue.length} · Chọn nghĩa tiếng Việt`,false));const opts=el('div','','lesson-options');const poolAnswers=data.filter(y=>y.w!==x.w&&y.m!==x.m);const choices=[x],seen=new Set([x.m]);for(const y of mix(poolAnswers)){if(!seen.has(y.m)){seen.add(y.m);choices.push(y)}if(choices.length===4)break}
+for(const y of mix(choices)){const b=el('button',y.m,'lesson-option');b.type='button';b.onclick=()=>{if(answered)return;answered=true;const good=y.w===x.w;if(good)score++;else missed.push(x);for(const button of opts.children){button.disabled=true;if(button.textContent===x.m)button.classList.add('correct')}if(!good)b.classList.add('wrong');status((good?'✓ Đúng! ':'✗ Chưa đúng. ')+`${x.w}（${x.r}）: ${x.m}`,good?'ok':'bad');$('lessonNextQuestion').disabled=false};opts.append(b)}area.append(opts)}
+$('lessonPrev').onclick=()=>{if(pool.length){position=(position+pool.length-1)%pool.length;render()}};
+$('lessonNext').onclick=()=>{if(pool.length){position=(position+1)%pool.length;render()}};
+$('lessonReveal').onclick=()=>{const card=$('lessonDisplay').querySelector('.lesson-card');if(!card||!pool.length)return;const meaning=card.querySelector('.lesson-meaning');if(meaning){meaning.remove();$('lessonReveal').textContent='Hiện nghĩa'}else{card.append(el('div',pool[position].m,'lesson-meaning'));$('lessonReveal').textContent='Ẩn nghĩa'}};
+$('lessonSpeak').onclick=()=>{if(pool.length)speak(pool[position].r.replaceAll('～',''))};
+$('lessonKnown').onclick=()=>{const x=pool[position];if(!x)return;known.has(x.w)?known.delete(x.w):known.add(x.w);try{localStorage.setItem('kanaStudioLesson01AKnown',JSON.stringify([...known]))}catch{};if($('lessonFilter').value!=='all')select();else render()};
+$('lessonStudy').onclick=()=>{quiz=false;render()};$('lessonTest').onclick=()=>startQuiz();$('lessonNextQuestion').onclick=()=>{if(!answered)return;qi++;render()};
+for(const id of ['lessonCategory','lessonFilter'])$(id).addEventListener('change',select);$('lessonSearch').addEventListener('input',select);select();
+})();
 </script>
 </body>
 </html>
